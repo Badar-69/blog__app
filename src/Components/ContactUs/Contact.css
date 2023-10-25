@@ -1,0 +1,289 @@
+.contact-main {
+    background-color: #f9f9ff;
+}
+
+.main-form {
+    display: flex;
+    width: 100%;
+    height: 47rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
+
+.contact-para {
+    color: #94979e;
+}
+
+.contact-form {
+    background-color: #fff;
+    width: 35%;
+    box-shadow: 0px 5px 20px 0px rgba(69, 67, 96, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.contact-inputs {
+    display: block;
+    width: 90%;
+    height: 3.3rem;
+    border: 1px solid #eee;
+    background-color: #f9f9ff;
+    margin-bottom: 1rem;
+    border-radius: 20px;
+    text-indent: 1rem;
+    transition: .2s;
+}
+
+.contact-inputs:focus{
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0px 5px 20px 0px rgba(69, 67, 96, 0.1);
+}
+
+.contact-inputs::placeholder {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 1rem;
+}
+
+.contact-msg {
+    height: 8rem;
+    resize: none;
+    font-family: 'Inter Tight', sans-serif;
+}
+
+.contact-msg::placeholder {
+    padding-top: 1rem;
+}
+
+.contact-btn {
+    width: 20%;
+    height: 2.3rem;
+    border: none;
+    background-color: #f67280;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Media Queries */
+@media screen and (max-width:1800px) and (min-width:1700px) {
+    .main-form {
+        height: 53rem
+    }
+
+    .contact-btn {
+        width: 22%;
+        height: 2.3rem;
+    }
+}
+
+/* 1536px */
+@media screen and (max-width:1699px) and (min-width:1536px) {
+    .main-form {
+        height: 53rem
+    }
+
+    .contact-btn {
+        width: 22%;
+        height: 2.4rem;
+    }
+}
+
+/* 1440px */
+@media screen and (max-width:1535px) and (min-width:1440px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-inputs {
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 25%;
+        height: 2.5rem;
+    }
+}
+
+/* 1280px */
+@media screen and (max-width:1439px) and (min-width:1280px) {
+    .main-form {
+        height: 55rem;
+    }
+
+    .contact-form {
+        width: 45%;
+    }
+
+    .contact-inputs {
+        height: 3.3rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 30%;
+        height: 3rem;
+    }
+}
+
+/* 1024px */
+@media screen and (max-width:1279px) and (min-width:1024px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 55%;
+    }
+
+    .contact-inputs {
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 30%;
+        height: 3rem;
+    }
+}
+
+/* 768px */
+@media screen and (max-width:1023px) and (min-width:768px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 80%;
+    }
+
+    .contact-inputs {
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 30%;
+        height: 3.3rem;
+    }
+}
+
+/* 500px */
+@media screen and (max-width:767px) and (min-width:500px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 80%;
+    }
+
+    .contact-inputs {
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 33%;
+        height: 3.3rem;
+    }
+}
+
+/* 425px */
+@media screen and (max-width:499px) and (min-width:425px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 80%;
+    }
+
+    .contact-inputs {
+        width: 97%;
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 40%;
+        height: 3.3rem;
+    }
+}
+
+/* 375px */
+@media screen and (max-width:424px) and (min-width:375px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 75%;
+    }
+
+    .contact-inputs {
+        width: 97%;
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 50%;
+        height: 3.3rem;
+    }
+}
+
+/* 320px */
+@media screen and (max-width:374px) and (min-width:320px) {
+    .main-form {
+        height: 55rem
+    }
+
+    .contact-form {
+        width: 75%;
+    }
+
+    .contact-inputs {
+        width: 97%;
+        height: 4rem;
+    }
+
+    .contact-msg {
+        height: 9rem;
+    }
+
+    .contact-btn {
+        width: 50%;
+        height: 3.3rem;
+    }
+}
