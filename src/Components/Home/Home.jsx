@@ -1,4 +1,5 @@
 import React from 'react'
+import { db } from '../../firebase.js'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, Pagination, Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
