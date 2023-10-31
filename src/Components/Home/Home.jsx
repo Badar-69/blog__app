@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, } from 'react'
 import { db } from '../../firebase.js'
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, Pagination, Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
@@ -12,6 +13,17 @@ import authorImg from '../../assets/images/author.jpg'
 import postImg from '../../assets/images/post-img-5.jpg'
 
 function Home() {
+
+    const fetchData = async () => {
+        const querySnapshot = await getDocs(query(collection(db, "Posts"), where("isFeatured", "==", true)));
+        querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+        });
+    }
+    
+    fetchData();
+
+
     return (
         <>
             <Swiper
@@ -27,8 +39,9 @@ function Home() {
                 modules={[Keyboard, Pagination, Navigation]}
                 className="mySwiper"
             >
-                <SwiperSlide>
 
+
+                <SwiperSlide>
                     <section className="featured-post">
                         <div className="feat-bg feat-bg-1">
                             <div className="feat-text-parent">
