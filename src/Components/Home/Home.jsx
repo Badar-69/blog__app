@@ -1,6 +1,7 @@
-import React, { useState, } from 'react'
-import { db } from '../../firebase.js'
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { useEffect, useState } from 'react';
+import { fetchFeaturedPosts } from '../../Utilities/firebaseApi';
+// import { db } from '../../firebase.js'
+// import { collection, getDocs, query, where } from "firebase/firestore";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, Pagination, Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
@@ -14,15 +15,18 @@ import postImg from '../../assets/images/post-img-5.jpg'
 
 function Home() {
 
-    const fetchData = async () => {
-        const querySnapshot = await getDocs(query(collection(db, "Posts"), where("isFeatured", "==", true)));
-        querySnapshot.forEach((doc) => {
-            console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
-        });
-    }
-    
-    fetchData();
+    const [featuredPosts, setFeaturedPosts] = useState([])
 
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        let _featuredPosts = await fetchFeaturedPosts();
+        console.log("home featured posts ", _featuredPosts)
+        setFeaturedPosts(_featuredPosts)
+    };
 
     return (
         <>
@@ -40,57 +44,63 @@ function Home() {
                 className="mySwiper"
             >
 
+                {featuredPosts.slice().reverse().map((post, index) => (
+                    <SwiperSlide key={index}>
+                        <section className="featured-post">
+                            <div className="feat-bg feat-bg-1"
 
-                <SwiperSlide>
-                    <section className="featured-post">
-                        <div className="feat-bg feat-bg-1">
-                            <div className="feat-text-parent">
-                                <div className="feat-text">
-                                    <div className="feat-top">
-                                        <div className="feat-cat">
-                                            <a href="/" className="category">Lifestyle</a>
+                                style={{
+                                    backgroundImage: `url(${post.imageUrls && post.imageUrls.length > 0 ? post.imageUrls[0] : ''})`,
+                                }}
+                            >
+                                <div className="feat-text-parent">
+                                    <div className="feat-text">
+                                        <div className="feat-top">
+                                            <div className="feat-cat">
+                                                <a href="/" className="category">{post.categoryDetails.category}</a>
+                                            </div>
+
+                                            <div className="feat-heading">
+                                                <Link className="feat-title" to='/post'>{post.title}</Link>
+                                            </div>
                                         </div>
 
-                                        <div className="feat-heading">
-                                            <Link className="feat-title" to='/post'>5 Effective Ways I’m Finding Focus in a Busy Season of Life</Link>
+                                        <div className="author-info">
+
+                                            <ul className="auth-list">
+                                                <li className=' post-img-parent'>
+                                                    <img className='auth-img' src={post.authorDetails.image} alt="" />
+                                                </li>
+
+                                                <li className='lists autor-name'>
+                                                    <a className='auth-link' href="/">{post.authorDetails.name}</a>
+                                                </li>
+
+                                                <li className="lists post-date">
+                                                    February 10, 2022
+                                                </li>
+
+                                                <li className="lists min-read">
+                                                    15 Min Read
+                                                </li>
+
+                                                <li className='lists auth-comments'>
+                                                    2 Comments
+                                                </li>
+                                            </ul>
 
                                         </div>
-                                    </div>
-
-                                    <div className="author-info">
-
-                                        <ul className="auth-list">
-                                            <li className=' post-img-parent'>
-                                                <img className='auth-img' src={authorImg} alt="" />
-                                            </li>
-
-                                            <li className='lists autor-name'>
-                                                <a className='auth-link' href="/">David Smith</a>
-                                            </li>
-
-                                            <li className="lists post-date">
-                                                February 10, 2022
-                                            </li>
-
-                                            <li className="lists min-read">
-                                                15 Min Read
-                                            </li>
-
-                                            <li className='lists auth-comments'>
-                                                2 Comments
-                                            </li>
-                                        </ul>
-
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </section>
-                </SwiperSlide>
+                        </section>
+                    </SwiperSlide>
+                ))}
+
 
                 {/* Second */}
-                <SwiperSlide><section className="featured-post">
+                {/* < SwiperSlide > <section className="featured-post">
                     <div className="feat-bg feat-bg-2">
                         <div className="feat-text-parent">
                             <div className="feat-text">
@@ -230,12 +240,12 @@ function Home() {
                         </div>
 
                     </section>
-                </SwiperSlide>
-            </Swiper>
+                </SwiperSlide> */}
+            </Swiper >
 
 
             {/* First Post */}
-            <section className="post-section">
+            < section className="post-section" >
                 <div className="blog-post">
                     <div className="post-card-img">
                         <img src={postImg} alt="post" className="post-img" />
@@ -269,7 +279,7 @@ function Home() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             <Footer />
         </>
