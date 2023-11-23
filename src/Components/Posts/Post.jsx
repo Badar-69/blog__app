@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { fetchPostById } from '../../Utilities/firebaseApi';
 import '../Posts/Post.css'
 import postImg from '../../assets/images/post-img.jpg'
 import authorImg from '../../assets/images/author.jpg'
@@ -14,6 +15,36 @@ import user2 from '../../assets/images/user-2.jpg'
 import Footer from '../Footer/Footer'
 
 function Post() {
+
+    const [postDetails, setPostDetails] = useState([]);
+    const postId = '9v9qjlpd5VIXCz6kjWGG'; // Replace with the actual random document ID
+
+    useEffect(() => {
+        const fetchPostDetails = async () => {
+            try {
+                const post = await fetchPostById(postId);
+                setPostDetails(post);
+            } catch (error) {
+                console.error('Error fetching post details:', error);
+                // Handle the error, e.g., display an error message to the user
+            }
+        };
+
+        fetchPostDetails();
+    }, [postId]);
+
+    const splitIntoParagraphs = (text) => {
+        // Split the text based on the pattern 'number - '
+        return text.split(/\d+ - /).map((paragraph, index) => (
+            // Exclude empty paragraphs
+            paragraph.trim() !== '' && (
+                <p key={index} className="post-body-para">
+                    {paragraph}
+                </p>
+            )
+        ));
+    };
+
     return (
         <>
             <section className="post-blog-section">
@@ -27,7 +58,7 @@ function Post() {
                             <div className="post-sing-content">
                                 <a href="/blog_app" className="post-category">Travel</a>
 
-                                <h3 className="post-con-title">What The Secrets You Will know about Jordan Petra if Visit it One Day?</h3>
+                                <h3 className="post-con-title">{postDetails.title}</h3>
 
                                 <ul className="post-sing-list">
                                     <li className='post-info list-post-img'>
@@ -53,7 +84,11 @@ function Post() {
                             </div>
 
                             <div className="post-body">
-                                <p className="post-body-para">
+
+                            {postDetails.fullDescription &&
+                                splitIntoParagraphs(postDetails.fullDescription)}
+
+                                {/* <p className="post-body-para">
                                     Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue
                                     juvenile had off Unknown may service
                                     subject her letters one bed. Child years noise ye in forty. Loud in this in both
@@ -144,7 +179,7 @@ function Post() {
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
                                     irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                </p>
+                                </p> */}
                             </div>
 
                             <div className="body-img">
