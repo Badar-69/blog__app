@@ -50,11 +50,14 @@ const fetchPostById = async (postId) => {
             const postData = postDoc.data();
             const categoryDetails = await fetchCategoryDetails(postData.categoryId);
             const authorDetails = await fetchAuthorDetails(postData.authorId);
+            const comments = await fetchCommentsForPost(postData);
+           
 
             const postWithDetails = {
                 ...postData,
                 categoryDetails,
                 authorDetails,
+                comments,
             };
 
             console.log('Post with Details:', postWithDetails);
@@ -71,6 +74,29 @@ const fetchPostById = async (postId) => {
 };
 
 
+const fetchCommentsForPost = async (post) => {
+    const comments = [];
+
+    // Check if the post has comments
+    if (post.comments && post.comments.length > 0) {
+        // Loop through each comment ID in the post's comments array
+        for (const commentId of post.comments) {
+            // Fetch the comment document based on the comment ID
+            const commentDocRef = doc(db, 'Comments', commentId);
+            const commentDoc = await getDoc(commentDocRef);
+
+            // If the comment document exists, add it to the comments array
+            if (commentDoc.exists()) {
+                const commentData = commentDoc.data();
+                comments.push(commentData);
+            } else {
+                console.warn(`Comment document with ID ${commentId} not found.`);
+            }
+        }
+    }
+
+    return comments;
+};
 
 
 export { fetchFeaturedPosts, fetchPostById };

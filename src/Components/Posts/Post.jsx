@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPostById } from '../../Utilities/firebaseApi';
 import '../Posts/Post.css'
-import postImg from '../../assets/images/post-img.jpg'
-import authorImg from '../../assets/images/author.jpg'
-import postImg1 from '../../assets/images/post-img-5.jpg'
-import postImg2 from '../../assets/images/post-img-5.2.jpg'
-import postImg3 from '../../assets/images/post-img-5.3.jpg'
 import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
 import lateImg3 from '../../assets/images/late-3.jpg'
@@ -17,7 +12,7 @@ import Footer from '../Footer/Footer'
 function Post() {
 
     const [postDetails, setPostDetails] = useState([]);
-    const postId = '9v9qjlpd5VIXCz6kjWGG'; // Replace with the actual random document ID
+    const postId = '9v9qjlpd5VIXCz6kjWGG';
 
     useEffect(() => {
         const fetchPostDetails = async () => {
@@ -26,7 +21,6 @@ function Post() {
                 setPostDetails(post);
             } catch (error) {
                 console.error('Error fetching post details:', error);
-                // Handle the error, e.g., display an error message to the user
             }
         };
 
@@ -52,21 +46,23 @@ function Post() {
                     <div className="post-row">
                         <div className="post-single">
                             <div className="post-sing-img">
-                                <img className='post-img-1' src={postImg} alt="" />
+                                {postDetails?.imageUrls?.slice(0, 1).map((imageUrl, index) => (
+                                    <img key={index} src={imageUrl} alt={`Post  ${index + 1}`} className="post-img-1" />
+                                ))}
                             </div>
 
                             <div className="post-sing-content">
-                                <a href="/blog_app" className="post-category">Travel</a>
+                                <a href="/blog_app" className="post-category">{postDetails.categoryDetails?.category}</a>
 
                                 <h3 className="post-con-title">{postDetails.title}</h3>
 
                                 <ul className="post-sing-list">
                                     <li className='post-info list-post-img'>
-                                        <img className='sing-post-author' src={authorImg} alt="" />
+                                        <img className='sing-post-author' src={postDetails.authorDetails?.image} alt="" />
                                     </li>
 
                                     <li className="post-info post-auth-name">
-                                        David Smith
+                                        {postDetails.authorDetails?.name}
                                     </li>
 
                                     <li className='post-info'>
@@ -85,8 +81,8 @@ function Post() {
 
                             <div className="post-body">
 
-                            {postDetails.fullDescription &&
-                                splitIntoParagraphs(postDetails.fullDescription)}
+                                {postDetails.fullDescription &&
+                                    splitIntoParagraphs(postDetails.fullDescription)}
 
                                 {/* <p className="post-body-para">
                                     Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue
@@ -183,9 +179,9 @@ function Post() {
                             </div>
 
                             <div className="body-img">
-                                <img src={postImg1} alt="" className="post-bd-img" />
-                                <img src={postImg2} alt="" className="post-bd-img" />
-                                <img src={postImg3} alt="" className="post-bd-img" />
+                                {postDetails?.imageUrls?.slice(0, 3).map((imageUrl, index) => (
+                                    <img key={index} src={imageUrl} alt={`Post  ${index + 1}`} className="post-bd-img" />
+                                ))}
                             </div>
 
                             <div className="post-tags">
@@ -203,15 +199,13 @@ function Post() {
                         <div className="author-widget">
                             <div className="author-wid-info">
                                 <div className="auth-info-img">
-                                    <img src={authorImg} alt="" className='author-side-img' />
+                                    <img src={postDetails.authorDetails?.image} alt="" className='author-side-img' />
                                 </div>
                                 <div className="auth-content-parent">
                                     <div className="auth-wid-content">
-                                        <h4 className="name-auth">Hi, I'm David Smith</h4>
+                                        <h4 className="name-auth">Hi, I'm {postDetails.authorDetails?.name}</h4>
                                         <p className="para-wid">
-                                            I'm David Smith, husband and father ,
-                                            I love Photography,travel and nature. I'm working as a writer and blogger with experience
-                                            of 5 years until now.
+                                            {postDetails.authorDetails?.about}
                                         </p>
 
                                         <div className="wid-socials">
@@ -440,27 +434,30 @@ function Post() {
                     <section className="comments-section">
                         <div className="widget-comment">
                             <div className="comm-head">
-                                <h3 className="comment-title"> 2 Comments</h3>
+                                <h3 className="comment-title"> {postDetails.comments?.length} Comment</h3>
                             </div>
 
                             <div className="comm-users">
-                                <div className="comm-item">
-                                    <div className="comm-img-parent">
-                                        <img src={user1} alt="" className="comm-user-img" />
-                                    </div>
-                                    <div className="comm-content">
-                                        <ul className="user-info">
-                                            <li className='info-list'>Muhammad Ali</li>
-                                            <li className='info-list'>January 15, 2022</li>
-                                        </ul>
+                                {postDetails.comments?.map((comment, index) => (
+                                    <div key={index} className="comm-item">
+                                        <div className="comm-img-parent">
+                                            <img src={user1} alt="" className="comm-user-img" />
+                                        </div>
+                                        <div className="comm-content">
+                                            <ul className="user-info">
+                                                <li className='info-list'>Muhammad Ali</li>
+                                                <li className='info-list'>January 15, 2022</li>
+                                            </ul>
 
-                                        <p className="comm-para">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus at doloremque adipisci eum placeat quod non fugiat aliquid sit similique!
-                                        </p>
+                                            <p className="comm-para">{comment.reply}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
+
                             </div>
 
-                            <div className="comm-users">
+                            {/* <div className="comm-users">
                                 <div className="comm-item">
                                     <div className="comm-img-parent">
                                         <img src={user2} alt="" className="comm-user-img" />
@@ -475,7 +472,7 @@ function Post() {
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="widget-form">
                                 <div className="comm-head">
