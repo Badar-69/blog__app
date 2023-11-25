@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchFeaturedPosts } from '../../Utilities/firebaseApi';
+import { fetchFeaturedPosts, fetchNonFeaturedPosts, } from '../../Utilities/firebaseApi';
 // import { db } from '../../firebase.js'
 // import { collection, getDocs, query, where } from "firebase/firestore";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -16,6 +16,8 @@ import postImg from '../../assets/images/post-img-5.jpg'
 function Home() {
 
     const [featuredPosts, setFeaturedPosts] = useState([])
+    const [nonFeaturedPosts, setNonFeaturedPosts] = useState([]);
+
 
 
     useEffect(() => {
@@ -24,8 +26,14 @@ function Home() {
 
     const fetchData = async () => {
         let _featuredPosts = await fetchFeaturedPosts();
+        let _nonFeaturedPosts = await fetchNonFeaturedPosts();
+
         console.log("home featured posts ", _featuredPosts)
+        console.log("home non-featured posts ", _nonFeaturedPosts);
+
+
         setFeaturedPosts(_featuredPosts)
+        setNonFeaturedPosts(_nonFeaturedPosts);
     };
 
     return (
@@ -85,7 +93,7 @@ function Home() {
                                                 </li>
 
                                                 <li className='lists auth-comments'>
-                                                    2 Comments
+                                                    {post.comments?.length} Comments
                                                 </li>
                                             </ul>
 
@@ -246,39 +254,42 @@ function Home() {
 
             {/* First Post */}
             < section className="post-section" >
-                <div className="blog-post">
-                    <div className="post-card-img">
-                        <img src={postImg} alt="post" className="post-img" />
-                    </div>
+                {nonFeaturedPosts.map((post, index) => (
+                    <div key={index} className="blog-post">
+                        <div className="post-card-img">
+                            <img src={post.imageUrls[0]} alt="post" className="post-img" />
+                        </div>
 
-                    <div className="blog-post-text-parent">
-                        <div className="blog-post-text">
-                            <div className="entry-cat">
-                                <a href="/" className="blog-category">Food</a>
+                        <div className="blog-post-text-parent">
+                            <div className="blog-post-text">
+                                <div className="entry-cat">
+                                    <a href="/" className="blog-category">Food</a>
+                                </div>
+
+                                <div className="entry-head">
+                                    <Link to="/post" className='post-title'>{post.title}</Link>
+                                </div>
+
+                                <div className="entry-des">
+                                    <p className="description">{post.shortDescription} </p>
+                                </div>
+
+                                <ul className="author-credit">
+                                    <li className='post-card-author'>
+                                        <img src={authorImg} alt="" className="post-auth-img" />
+                                    </li>
+
+                                    <p className="card-auth-name">David Smith</p>
+
+                                    <li className="entry-date">
+                                        <p className="post-card-date">February 10, 2022</p>
+                                    </li>
+                                </ul>
                             </div>
-
-                            <div className="entry-head">
-                                <Link to="/post" className='post-title'>What Are Your Tips for Hosting an Easy Birthday Party?</Link>
-                            </div>
-
-                            <div className="entry-des">
-                                <p className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit quam atque ipsa laborum sunt distinctio... </p>
-                            </div>
-
-                            <ul className="author-credit">
-                                <li className='post-card-author'>
-                                    <img src={authorImg} alt="" className="post-auth-img" />
-                                </li>
-
-                                <p className="card-auth-name">David Smith</p>
-
-                                <li className="entry-date">
-                                    <p className="post-card-date">February 10, 2022</p>
-                                </li>
-                            </ul>
                         </div>
                     </div>
-                </div>
+                ))}
+
             </section >
 
             <Footer />

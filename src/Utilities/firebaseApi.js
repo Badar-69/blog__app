@@ -98,5 +98,48 @@ const fetchCommentsForPost = async (post) => {
     return comments;
 };
 
+const fetchAllCategories = async () => {
+    const categories = [];
+    const q = collection(db, 'categories');
+    const querySnapshot = await getDocs(q);
 
-export { fetchFeaturedPosts, fetchPostById };
+    querySnapshot.forEach((doc) => {
+        const categoryData = doc.data();
+        categories.push(categoryData);
+    });
+
+    console.log('All Categories:', categories);
+    return categories;
+};
+
+// for author.jsx
+const fetchAuthorCollection = async () => {
+    const author = [];
+    const a = collection(db, 'author')
+    const querySnapshot = await getDocs(a)
+
+    querySnapshot.forEach((doc) => {
+        const authorData = doc.data();
+        author.push(authorData)
+    })
+
+    console.log('Author Data:', author)
+    return author
+}
+
+const fetchNonFeaturedPosts = async () => {
+    const postsRef = collection(db, 'Posts');
+    const q = query(postsRef, where('shortDescription', '!=', null));
+    const querySnapshot = await getDocs(q);
+  
+    const nonFeaturedPosts = [];
+    querySnapshot.forEach((doc) => {
+      const postData = doc.data();
+      nonFeaturedPosts.push(postData);
+    });
+  
+    return nonFeaturedPosts;
+  };
+
+
+export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, };

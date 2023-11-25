@@ -1,30 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPostById } from '../../Utilities/firebaseApi';
+import { fetchPostById, fetchAllCategories } from '../../Utilities/firebaseApi';
 import '../Posts/Post.css'
 import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
 import lateImg3 from '../../assets/images/late-3.jpg'
 import lateImg4 from '../../assets/images/late-4.jpg'
 import user1 from '../../assets/images/user-1.jpg'
-import user2 from '../../assets/images/user-2.jpg'
 import Footer from '../Footer/Footer'
 
 function Post() {
 
     const [postDetails, setPostDetails] = useState([]);
+    const [allCategories, setAllCategories] = useState([]);
     const postId = '9v9qjlpd5VIXCz6kjWGG';
 
     useEffect(() => {
         const fetchPostDetails = async () => {
             try {
                 const post = await fetchPostById(postId);
+                console.log('Fetched Post:', post);  // Add this line
                 setPostDetails(post);
             } catch (error) {
                 console.error('Error fetching post details:', error);
             }
         };
 
+        const fetchCategories = async () => {
+            try {
+                const categories = await fetchAllCategories();
+                setAllCategories(categories);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
         fetchPostDetails();
+        fetchCategories();
     }, [postId]);
 
     const splitIntoParagraphs = (text) => {
@@ -74,7 +85,7 @@ function Post() {
                                     </li>
 
                                     <li className="post-info">
-                                        2 Comments
+                                        {postDetails.comments?.length} Comment
                                     </li>
                                 </ul>
                             </div>
@@ -324,48 +335,16 @@ function Post() {
                                         <h4 className="cate-wid-heading">Catgories</h4>
                                     </div>
 
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Livestyle</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
+                                    {allCategories.map((category) => (
+                                        <div className="categories-list">
+                                            <div className="cate-wid-list">
+                                                <a href="/" className='cate-name'>{category.category}</a>
+                                                <span href="/" className='cate-number'>22 Posts</span>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Travel</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Food</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Fashion</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Interior</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="categories-list">
-                                        <div className="cate-wid-list">
-                                            <a href="/" className='cate-name'>Art & Design</a>
-                                            <span href="/" className='cate-number'>22 Posts</span>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
+
                             </section>
 
                             <section className="tag-section">
@@ -375,19 +354,9 @@ function Post() {
                                     </div>
 
                                     <ul className="tag-wid-list">
-                                        <li className='lists-tags'>Travel</li>
-                                        <li className='lists-tags'>Nature</li>
-                                        <li className='lists-tags'>Tips</li>
-                                        <li className='lists-tags'>Forest</li>
-                                        <li className='lists-tags'>Beach</li>
-                                        <li className='lists-tags'>Fashion</li>
-                                        <li className='lists-tags'>Livestyle</li>
-                                        <li className='lists-tags'>Healthy</li>
-                                        <li className='lists-tags'>Food</li>
-                                        <li className='lists-tags'>Breakfast</li>
-                                        <li className='lists-tags'>Tips & Hacks</li>
-                                        <li className='lists-tags'>Nutrition</li>
-                                        <li className='lists-tags'>Cake</li>
+                                        {postDetails.tags && postDetails.tags.map((tag, index) => (
+                                            <li key={index} className='lists-tags'>{tag}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -456,23 +425,6 @@ function Post() {
                                 ))}
 
                             </div>
-
-                            {/* <div className="comm-users">
-                                <div className="comm-item">
-                                    <div className="comm-img-parent">
-                                        <img src={user2} alt="" className="comm-user-img" />
-                                    </div>
-                                    <div className="comm-content">
-                                        <ul className="user-info">
-                                            <li className='info-list'>Adam Bobly</li>
-                                            <li className='info-list'>January 15, 2022</li>
-                                        </ul>
-
-                                        <p className="comm-para">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus at doloremque adipisci eum placeat quod non fugiat aliquid sit similique!
-                                        </p>
-                                    </div>
-                                </div>
-                            </div> */}
 
                             <div className="widget-form">
                                 <div className="comm-head">

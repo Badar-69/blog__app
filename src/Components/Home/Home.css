@@ -227,11 +227,14 @@
 /* First Blog Post */
 .post-section {
     position: relative;
-    top: 2rem;
-    height: 40rem;
+    top: 6rem;
+    /* height: 40rem; */
     display: flex;
-    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-around;
     align-items: center;
+    margin-bottom: 4rem;
 }
 
 .blog-post {
@@ -239,6 +242,7 @@
     /* height: 51vh; */
     box-shadow: 0px 5px 20px 0px rgba(69, 67, 96, 0.1);
     border-radius: 20px;
+    margin-bottom: 5rem;
 }
 
 .post-card-img {
