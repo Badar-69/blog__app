@@ -5,20 +5,19 @@ import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
 import lateImg3 from '../../assets/images/late-3.jpg'
 import lateImg4 from '../../assets/images/late-4.jpg'
-import user1 from '../../assets/images/user-1.jpg'
 import Footer from '../Footer/Footer'
+import { useParams } from 'react-router-dom';
 
 function Post() {
-
+    const { postId } = useParams();
     const [postDetails, setPostDetails] = useState([]);
     const [allCategories, setAllCategories] = useState([]);
-    const postId = '9v9qjlpd5VIXCz6kjWGG';
+
 
     useEffect(() => {
         const fetchPostDetails = async () => {
             try {
                 const post = await fetchPostById(postId);
-                console.log('Fetched Post:', post);  // Add this line
                 setPostDetails(post);
             } catch (error) {
                 console.error('Error fetching post details:', error);
@@ -63,21 +62,27 @@ function Post() {
                             </div>
 
                             <div className="post-sing-content">
-                                <a href="/blog_app" className="post-category">{postDetails.categoryDetails?.category}</a>
+                                <a href="/blog_app" className="post-category">{postDetails?.categoryDetails?.category}</a>
 
-                                <h3 className="post-con-title">{postDetails.title}</h3>
+                                <h3 className="post-con-title">{postDetails?.title}</h3>
 
                                 <ul className="post-sing-list">
                                     <li className='post-info list-post-img'>
-                                        <img className='sing-post-author' src={postDetails.authorDetails?.image} alt="" />
+                                        <img className='sing-post-author' src={postDetails?.authorDetails?.image} alt="" />
                                     </li>
 
                                     <li className="post-info post-auth-name">
-                                        {postDetails.authorDetails?.name}
+                                        {postDetails?.authorDetails?.name}
                                     </li>
 
                                     <li className='post-info'>
-                                        February 10, 2022
+                                        {postDetails.dateAdded && postDetails.dateAdded.seconds
+                                            ? new Date(postDetails.dateAdded.seconds * 1000).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                            })
+                                            : 'Date Not Available'}
                                     </li>
 
                                     <li className="post-info">
@@ -85,108 +90,16 @@ function Post() {
                                     </li>
 
                                     <li className="post-info">
-                                        {postDetails.comments?.length} Comment
+                                        {postDetails?.comments?.length} Comment
                                     </li>
                                 </ul>
                             </div>
 
                             <div className="post-body">
 
-                                {postDetails.fullDescription &&
-                                    splitIntoParagraphs(postDetails.fullDescription)}
+                                {postDetails?.fullDescription &&
+                                    splitIntoParagraphs(postDetails?.fullDescription)}
 
-                                {/* <p className="post-body-para">
-                                    Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue
-                                    juvenile had off Unknown may service
-                                    subject her letters one bed. Child years noise ye in forty. Loud in this in both
-                                    hold. My entrance me is disposal bachelor remember relation
-                                </p>
-
-                                <h3 className="post-des-title"> 1 - Pick a sustainable travel destination </h3>
-
-                                <p className="post-body-para">
-                                    Oh acceptance apartments up sympathize astonished delightful. Waiting him new lasting towards. Continuing melancholy especially
-                                    so to. Me unpleasing  impossible in attachment announcing so astonished. What ask leaf may nor upon door. Tended remain
-                                    my do stairs. Oh smiling amiable am so visited cordial in offices hearted.
-                                </p>
-
-                                <p className="post-body-para">
-                                    Oh acceptance apartments up sympathize astonished delightful. Waiting him new lasting towards. Continuing melancholy especially
-                                    so to. Me unpleasing  impossible in attachment announcing so astonished. What ask leaf may nor upon door. Tended remain
-                                    my do stairs. Oh smiling amiable am so visited cordial in offices hearted.
-                                </p>
-
-                                <p className="post-body-para">
-                                    Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                                    in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                                    in culpa qui officia
-                                    deserunt mollit anim id est laborum.
-
-                                </p>
-
-                                <h3 className="post-des-title"> 2 - Research before booking </h3>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                    cupidatat non proident.
-                                </p>
-
-                                <div className="quote">
-                                    <p className="para-quote">
-                                        The man who goes alone can start today; but he who
-                                        travels with another must wait till that other is ready.
-                                    </p>
-
-                                    <small className="writer">Henry David Thoreau</small>
-                                </div>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor Unknown may service in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                    cupidatat non proident.
-                                </p>
-
-                                <h3 className="post-des-title"> 3 - Pack light, Easy Sustainable Travel Trip </h3>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                    cupidatat non proident.
-                                    sunt in culpa qui officia deserunt mollit anim id e st laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                                    do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam.
-                                </p>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                    cupidatat non proident.
-                                </p>
-
-                                <h3 className="post-des-title"> 4 - Be respectful of the environment </h3>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-
-                                <ul className="post-body-list">
-                                    <li className='list-post'>Be respectful of the environment</li>
-                                    <li className='list-post'>Pick a sustainable travel destination instead of a popular one
-                                    </li>
-                                    <li className='list-post'>Research before booking</li>
-                                    <li className='list-post'>Pack light, Easy Sustainable Travel Trip</li>
-                                    <li className='list-post'>Be respectful of the environment</li>
-                                </ul>
-
-                                <p className="post-body-para">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                </p> */}
                             </div>
 
                             <div className="body-img">
@@ -210,13 +123,13 @@ function Post() {
                         <div className="author-widget">
                             <div className="author-wid-info">
                                 <div className="auth-info-img">
-                                    <img src={postDetails.authorDetails?.image} alt="" className='author-side-img' />
+                                    <img src={postDetails?.authorDetails?.image} alt="" className='author-side-img' />
                                 </div>
                                 <div className="auth-content-parent">
                                     <div className="auth-wid-content">
-                                        <h4 className="name-auth">Hi, I'm {postDetails.authorDetails?.name}</h4>
+                                        <h4 className="name-auth">Hi, I'm {postDetails?.authorDetails?.name}</h4>
                                         <p className="para-wid">
-                                            {postDetails.authorDetails?.about}
+                                            {postDetails?.authorDetails?.about}
                                         </p>
 
                                         <div className="wid-socials">
@@ -354,7 +267,7 @@ function Post() {
                                     </div>
 
                                     <ul className="tag-wid-list">
-                                        {postDetails.tags && postDetails.tags.map((tag, index) => (
+                                        {postDetails?.tags && postDetails?.tags.map((tag, index) => (
                                             <li key={index} className='lists-tags'>{tag}</li>
                                         ))}
                                     </ul>
@@ -403,18 +316,18 @@ function Post() {
                     <section className="comments-section">
                         <div className="widget-comment">
                             <div className="comm-head">
-                                <h3 className="comment-title"> {postDetails.comments?.length} Comment</h3>
+                                <h3 className="comment-title"> {postDetails?.comments?.length} Comment</h3>
                             </div>
 
                             <div className="comm-users">
-                                {postDetails.comments?.map((comment, index) => (
+                                {postDetails?.comments?.map((comment, index) => (
                                     <div key={index} className="comm-item">
                                         <div className="comm-img-parent">
-                                            <img src={user1} alt="" className="comm-user-img" />
+                                            <img src={comment.userDetails?.userImg} alt="" className="comm-user-img" />
                                         </div>
                                         <div className="comm-content">
                                             <ul className="user-info">
-                                                <li className='info-list'>Muhammad Ali</li>
+                                                <li className='info-list'>{comment.userDetails?.userName}</li>
                                                 <li className='info-list'>January 15, 2022</li>
                                             </ul>
 

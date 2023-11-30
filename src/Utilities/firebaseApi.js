@@ -19,13 +19,11 @@ const fetchFeaturedPosts = async () => {
             ...postData,
             categoryDetails,
             authorDetails,
+            id: doc.id,
         };
 
         featuredPosts.push(postWithDetails);
     }
-
-    console.log('Featured Posts with Details:', featuredPosts);
-
     return featuredPosts;
 };
 
@@ -51,7 +49,7 @@ const fetchPostById = async (postId) => {
             const categoryDetails = await fetchCategoryDetails(postData.categoryId);
             const authorDetails = await fetchAuthorDetails(postData.authorId);
             const comments = await fetchCommentsForPost(postData);
-           
+
 
             const postWithDetails = {
                 ...postData,
@@ -88,7 +86,17 @@ const fetchCommentsForPost = async (post) => {
             // If the comment document exists, add it to the comments array
             if (commentDoc.exists()) {
                 const commentData = commentDoc.data();
-                comments.push(commentData);
+
+                // Fetch user details based on the userId in the comment
+                const user = await fetchUserDetails(commentData.userId);
+
+                // Add user details to the comment data
+                const commentWithUserDetails = {
+                    ...commentData,
+                    userDetails: user,
+                };
+
+                comments.push(commentWithUserDetails);
             } else {
                 console.warn(`Comment document with ID ${commentId} not found.`);
             }
@@ -96,7 +104,21 @@ const fetchCommentsForPost = async (post) => {
     }
 
     return comments;
-};
+}
+
+const fetchUserDetails = async (userId) => {
+    // Fetch user document based on userId
+    const userDocRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userDocRef);
+
+    // If the user document exists, return user details
+    if (userDoc.exists()) {
+        return userDoc.data();
+    } else {
+        console.warn(`User document with ID ${userId} not found.`);
+        return null;
+    }
+}
 
 const fetchAllCategories = async () => {
     const categories = [];
@@ -131,15 +153,31 @@ const fetchNonFeaturedPosts = async () => {
     const postsRef = collection(db, 'Posts');
     const q = query(postsRef, where('shortDescription', '!=', null));
     const querySnapshot = await getDocs(q);
-  
+
     const nonFeaturedPosts = [];
-    querySnapshot.forEach((doc) => {
-      const postData = doc.data();
-      nonFeaturedPosts.push(postData);
-    });
-  
+
+    for (const doc of querySnapshot.docs) {
+        const postData = doc.data();
+
+        // Fetch additional details for category, author, and comments
+        const categoryDetails = await fetchCategoryDetails(postData.categoryId);
+        const authorDetails = await fetchAuthorDetails(postData.authorId);
+        const comments = await fetchCommentsForPost(postData);
+
+        // Combine the post data with additional details
+        const postWithDetails = {
+            ...postData,
+            categoryDetails,
+            authorDetails,
+            comments,
+            id: doc.id,
+        };
+
+        nonFeaturedPosts.push(postWithDetails);
+    }
+
     return nonFeaturedPosts;
-  };
+};
 
 
 export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, };

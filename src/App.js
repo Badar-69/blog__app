@@ -17,6 +17,7 @@ function App() {
     document.title = 'NoonPost - Personal Blog';
   }, []);
 
+
   return (
     <>
       <Router basename=''>
@@ -27,7 +28,7 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="author" element={<Author />} />
           <Route path="contactUs" element={<Contact />} />
-          <Route path="post" element={<Post />} />
+          <Route path="/post/:postId" element={<Post />} />
           <Route path="error" element={<Error />} />
         </Routes>
       </Router>
