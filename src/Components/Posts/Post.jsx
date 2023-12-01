@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPostById, fetchAllCategories } from '../../Utilities/firebaseApi';
+import { fetchPostById, fetchAllCategories, fetchLatestPosts } from '../../Utilities/firebaseApi';
 import '../Posts/Post.css'
 import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
@@ -12,6 +12,8 @@ function Post() {
     const { postId } = useParams();
     const [postDetails, setPostDetails] = useState([]);
     const [allCategories, setAllCategories] = useState([]);
+    const [latestPosts, setLatestPosts] = useState([]);
+
 
 
     useEffect(() => {
@@ -33,8 +35,18 @@ function Post() {
             }
         };
 
+        const fetchLatest = async () => {
+            try {
+                const latestPosts = await fetchLatestPosts();
+                setLatestPosts(latestPosts);
+            } catch (error) {
+                console.error('Error fetching latest posts:', error);
+            }
+        };
+
         fetchPostDetails();
         fetchCategories();
+        fetchLatest();
     }, [postId]);
 
     const splitIntoParagraphs = (text) => {
@@ -159,8 +171,34 @@ function Post() {
                                         <h4 className="late-heading">Latest Post</h4>
                                     </div>
 
-                                    {/* 1st */}
-                                    <div className="late-posts">
+                                    {latestPosts.map((post, index) => (
+                                        <div key={index} className="late-posts">
+                                            <div className="late-items">
+                                                <div className="late-img-parent">
+                                                    <img src={post.imageUrls[0]} alt="" className="late-img" />
+                                                </div>
+
+                                                <div className="late-content">
+                                                    <p className="late-para">
+                                                        {post.title.split(' ').length > 7
+                                                            ? `${post.title.split(' ').slice(0, 7).join(' ')}...`
+                                                            : post.title}
+                                                    </p>
+
+                                                    <small className="post-date">
+                                                        {post.dateAdded && post.dateAdded.seconds
+                                                            ? new Date(post.dateAdded.seconds * 1000).toLocaleDateString('en-US', {
+                                                                year: 'numeric',
+                                                                month: 'long',
+                                                                day: 'numeric',
+                                                            })
+                                                            : 'Date Not Available'}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {/* <div className="late-posts">
                                         <div className="late-items">
                                             <div className="late-img-parent">
                                                 <img src={prevPost} alt="" className='late-img' />
@@ -179,7 +217,6 @@ function Post() {
                                         </div>
                                     </div>
 
-                                    {/* 2nd */}
                                     <div className="late-posts">
                                         <div className="late-items">
                                             <div className="late-img-parent">
@@ -199,7 +236,6 @@ function Post() {
                                         </div>
                                     </div>
 
-                                    {/* 3rd */}
                                     <div className="late-posts">
                                         <div className="late-items">
                                             <div className="late-img-parent">
@@ -219,7 +255,7 @@ function Post() {
                                         </div>
                                     </div>
 
-                                    {/* 4th */}
+                                    
                                     <div className="late-posts">
                                         <div className="late-items">
                                             <div className="late-img-parent">
@@ -237,7 +273,7 @@ function Post() {
                                                 </small>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </section>
 

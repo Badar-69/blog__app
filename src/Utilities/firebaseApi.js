@@ -1,5 +1,5 @@
 import { db } from '../firebase.js';
-import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, getDoc, limit, orderBy } from 'firebase/firestore';
 
 // For Home.jsx
 const fetchFeaturedPosts = async () => {
@@ -179,5 +179,23 @@ const fetchNonFeaturedPosts = async () => {
     return nonFeaturedPosts;
 };
 
+const fetchLatestPosts = async () => {
+    try {
+      const postsRef = collection(db, 'Posts');
+      const q = query(postsRef, orderBy('dateAdded', 'desc'), limit(5));
+      const querySnapshot = await getDocs(q);
+  
+      const latestPostsData = [];
+      querySnapshot.forEach((doc) => {
+        const postData = doc.data();
+        latestPostsData.push({ ...postData, id: doc.id });
+      });
+  
+      return latestPostsData;
+    } catch (error) {
+      console.error('Error fetching latest posts:', error);
+      throw error;
+    }
+  };
 
-export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, };
+export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, fetchLatestPosts };
