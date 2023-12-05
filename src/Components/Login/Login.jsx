@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../Login/Login.css'
 import Footer from '../Footer/Footer'
+import { Link } from 'react-router-dom'
+import { auth } from '../../firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 
 function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const signIn = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential)
+      }).catch((error) => {
+        console.log(error)
+      })
+  }
   return (
     <>
       <section className="login-container">
@@ -12,9 +27,12 @@ function Login() {
             <h5 className="login-heading">Login</h5>
           </div>
 
-          <form action='/' className="login-form">
-            <input type="text" name="userName" className='form-one-input input-name' placeholder='Username' />
-            <input type="password" className='form-one-input input-pass' placeholder='Password' />
+          <form onSubmit={signIn} action='/' className="login-form">
+            <input type="email" name="userName" className='form-one-input input-name' placeholder='Email' value={email}
+              onChange={(e) => setEmail(e.target.value)} />
+
+            <input type="password" className='form-one-input input-pass' placeholder='Password' value={password}
+              onChange={(e) => setPassword(e.target.value)} />
 
             <div className="custom-check">
               <div className="sign-control">
@@ -33,7 +51,7 @@ function Login() {
           <p className="form-para">
             Don't have an account?
 
-            <a href="/" className='form-create'>Create One</a>
+            <Link to="/signup" className='form-create'>Create One</Link>
           </p>
         </div>
       </section>

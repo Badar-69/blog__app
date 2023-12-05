@@ -1,9 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../SignUp/SignUp.css'
 import Footer from '../Footer/Footer'
 import profile from '../../assets/images/profile.png'
+import { Link } from 'react-router-dom'
+import { auth } from '../../firebase'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
 
 function SignUp() {
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const signUp = (e) => {
+        e.preventDefault();
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            console.log(userCredential)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
     return (
         <>
             <section className="signup-container">
@@ -20,10 +37,17 @@ function SignUp() {
                         <h5 className="signup-heading">Sign Up</h5>
                     </div>
 
-                    <form action='/' className="signup-form">
-                        <input type="text" name="userName" className='form-two-input input-user' placeholder='Username' />
-                        <input type="email" name="email" className="form-two-input input-email" placeholder='Email Address'/>
-                        <input type="password" className='form-two-input input-pass2' placeholder='Password' />
+                    <form onSubmit={signUp} action='/' className="signup-form">
+                        <input type="text" name="userName" className='form-two-input input-user' placeholder='Username'
+                            value={name}
+                            onChange={(e) => setName(e.target.value)} />
+
+                        <input type="email" name="email" className="form-two-input input-email" placeholder='Email Address'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
+
+                        <input type="password" className='form-two-input input-pass2' placeholder='Password' value={password}
+                            onChange={(e) => setPassword(e.target.value)} />
 
                         <div className="custom-signup">
                             <div className="signup-control">
@@ -42,7 +66,7 @@ function SignUp() {
                     <p className="form-para2">
                         Already have an account?
 
-                        <a href="/" className='login-create'>Login</a>
+                        <Link to="/login" className='login-create'>Login</Link>
                     </p>
                 </div>
             </section>

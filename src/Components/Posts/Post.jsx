@@ -3,8 +3,6 @@ import { fetchPostById, fetchAllCategories, fetchLatestPosts } from '../../Utili
 import '../Posts/Post.css'
 import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
-import lateImg3 from '../../assets/images/late-3.jpg'
-import lateImg4 from '../../assets/images/late-4.jpg'
 import Footer from '../Footer/Footer'
 import { useParams } from 'react-router-dom';
 
