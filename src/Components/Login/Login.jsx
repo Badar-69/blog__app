@@ -1,20 +1,23 @@
 import React, { useState } from 'react'
 import '../Login/Login.css'
 import Footer from '../Footer/Footer'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   const signIn = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential)
+        navigate('/'); // Redirect to the home page
       }).catch((error) => {
         console.log(error)
       })
