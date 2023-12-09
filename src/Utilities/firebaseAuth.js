@@ -2,7 +2,9 @@ import { auth } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
-import { db, storage } from '../firebase'; // Import your Firestore and Storage instances
+import { db, storage } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+
 
 const signUp = async (email, password, username, profileImage) => {
     try {
@@ -25,7 +27,6 @@ const signUp = async (email, password, username, profileImage) => {
             registrationDate: serverTimestamp(),
             userImg: profileImage ? `profileImages/${user.uid}.jpg` : null,
             username,
-            // Add more user information if needed
         });
 
         return user;
@@ -35,4 +36,13 @@ const signUp = async (email, password, username, profileImage) => {
     }
 };
 
-export { signUp };
+const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        unsubscribe(); // Stop listening immediately after getting the user info
+        resolve(user);
+      }, reject);
+    });
+  };
+
+export { signUp, getCurrentUser };

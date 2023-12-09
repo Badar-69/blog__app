@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPostById, fetchAllCategories, fetchLatestPosts } from '../../Utilities/firebaseApi';
+import { fetchPostById, fetchAllCategories, fetchLatestPosts, addCommentToPost } from '../../Utilities/firebaseApi';
 import '../Posts/Post.css'
 import prevPost from '../../assets/images/prev.jpg'
 import forPost from '../../assets/images/forward.jpg'
 import Footer from '../Footer/Footer'
 import { useParams } from 'react-router-dom';
+import { getCurrentUser } from '../../Utilities/firebaseAuth';
 
 function Post() {
     const { postId } = useParams();
     const [postDetails, setPostDetails] = useState([]);
     const [allCategories, setAllCategories] = useState([]);
     const [latestPosts, setLatestPosts] = useState([]);
-
+    const [comment, setComment] = useState('');
 
 
     useEffect(() => {
@@ -57,6 +58,36 @@ function Post() {
                 </p>
             )
         ));
+    };
+
+
+    const handleCommentChange = (e) => {
+        setComment(e.target.value);
+    };
+
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+
+        const user = await getCurrentUser();
+
+        if (!user) {
+            console.log('Please sign up first.');
+            return;
+        }
+
+        const commentData = {
+            reply: comment,
+            userId: user.uid,
+            dateAdded: new Date(),
+            dateUpdated: new Date(),
+        };
+
+        try {
+            await addCommentToPost(postId, commentData);
+            console.log('Comment added successfully!');
+        } catch (error) {
+            console.error('Error adding comment:', error);
+        }
     };
 
     return (
@@ -196,82 +227,6 @@ function Post() {
                                             </div>
                                         </div>
                                     ))}
-                                    {/* <div className="late-posts">
-                                        <div className="late-items">
-                                            <div className="late-img-parent">
-                                                <img src={prevPost} alt="" className='late-img' />
-                                            </div>
-
-
-                                            <div className="late-content">
-                                                <p className="late-para">
-                                                    5 Things I Wish I Knew Before Travelling to...
-                                                </p>
-
-                                                <small className="post-date">
-                                                    January 15, 2022
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="late-posts">
-                                        <div className="late-items">
-                                            <div className="late-img-parent">
-                                                <img src={forPost} alt="" className='late-img' />
-                                            </div>
-
-
-                                            <div className="late-content">
-                                                <p className="late-para">
-                                                    5 Things I Wish I Knew Before Travelling to...
-                                                </p>
-
-                                                <small className="post-date">
-                                                    January 15, 2022
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="late-posts">
-                                        <div className="late-items">
-                                            <div className="late-img-parent">
-                                                <img src={lateImg3} alt="" className='late-img' />
-                                            </div>
-
-
-                                            <div className="late-content">
-                                                <p className="late-para">
-                                                    5 Things I Wish I Knew Before Travelling to...
-                                                </p>
-
-                                                <small className="late-post-date">
-                                                    January 15, 2022
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div className="late-posts">
-                                        <div className="late-items">
-                                            <div className="late-img-parent">
-                                                <img src={lateImg4} alt="" className='late-img' />
-                                            </div>
-
-
-                                            <div className="late-content">
-                                                <p className="late-para">
-                                                    5 Things I Wish I Knew Before Travelling to...
-                                                </p>
-
-                                                <small className="post-date">
-                                                    January 15, 2022
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </section>
 
@@ -378,13 +333,19 @@ function Post() {
                                     <h3 className="comment-title"> Leave a Reply</h3>
                                 </div>
 
-                                <form action='/' className="comment-form">
+                                <form action='/' className="comment-form" onSubmit={handleCommentSubmit}>
                                     <p className="comm-form-para">
                                         Your email address will not be published, Required fields are marked*.
                                     </p>
 
                                     <div className="input-parent-row">
-                                        <textarea name="textarea" className="comm-inputs comm-textarea" placeholder='Message*'></textarea>
+                                        <textarea
+                                            name="textarea"
+                                            className="comm-inputs comm-textarea"
+                                            placeholder='Message*'
+                                            value={comment}
+                                            onChange={handleCommentChange}
+                                        ></textarea>
 
                                         <input type="text" className='comm-inputs inputs-small comm-name' placeholder='Name*' />
                                         <input type="email" className='comm-inputs inputs-small comm-email' placeholder='Email*' />

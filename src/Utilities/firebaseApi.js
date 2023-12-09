@@ -1,5 +1,5 @@
 import { db } from '../firebase.js';
-import { collection, getDocs, query, where, doc, getDoc, limit, orderBy } from 'firebase/firestore';
+import { collection, arrayUnion, updateDoc, serverTimestamp, addDoc, getDocs, query, where, doc, getDoc, limit, orderBy } from 'firebase/firestore';
 
 // For Home.jsx
 const fetchFeaturedPosts = async () => {
@@ -198,4 +198,25 @@ const fetchLatestPosts = async () => {
     }
   };
 
-export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, fetchLatestPosts };
+  const addCommentToPost = async (postId, commentData) => {
+    try {
+        const commentsRef = collection(db, 'Comments');
+        const newCommentRef = await addDoc(commentsRef, {
+            ...commentData,
+            dateAdded: serverTimestamp(),
+        });
+
+        const postRef = collection(db, 'Posts', postId);
+        await updateDoc(postRef, {
+            comments: arrayUnion(newCommentRef),
+        });
+
+        console.log('Comment added successfully!');
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        throw error;
+    }
+};
+
+
+export { fetchFeaturedPosts, fetchPostById, fetchAllCategories, fetchAuthorCollection, fetchNonFeaturedPosts, fetchLatestPosts, addCommentToPost };

@@ -71,7 +71,7 @@ function SignUp() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)} />
 
-                                <input type="password" className='form-two-input input-pass2' placeholder='Password' value={password}
+                                <input type="password" className='form-two-input input-pass2' placeholder='Password' value={password} autoComplete='on'
                                     onChange={(e) => setPassword(e.target.value)} />
 
                                 <div className="custom-signup">
