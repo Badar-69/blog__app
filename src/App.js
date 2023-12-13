@@ -23,7 +23,7 @@ function App() {
       <Router basename=''>
         <Navbar />
         <Routes>
-          <Route exact = 'true' path="/" element={<Home />} />
+          <Route exact='true' path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="author" element={<Author />} />

@@ -1,5 +1,5 @@
 .post-blog-section {
-    height: 279rem;
+    height: 265rem;
     background-color: #f9f9ff;
 }
 
@@ -742,9 +742,9 @@
 
 /* 1280px */
 @media screen and (max-width:1439px) and (min-width:1200px) {
-    .post-blog-section {
+    /* .post-blog-section {
         height: 284rem;
-    }
+    } */
 
     .post-row {
         margin-left: 1rem;
