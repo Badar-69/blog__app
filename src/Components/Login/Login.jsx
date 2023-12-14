@@ -9,11 +9,35 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
   const navigate = useNavigate();
 
+  const validateEmail = (value) => {
+    // You can customize the email validation logic
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    setIsValidEmail(isValid);
+    return isValid;
+  };
+
+  const validatePassword = (value) => {
+    // You can customize the password validation logic
+    const isValid = value.length >= 8;
+    setIsValidPassword(isValid);
+    return isValid;
+  };
 
   const signIn = (e) => {
     e.preventDefault();
+
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isEmailValid || !isPasswordValid) {
+      alert('Login failed. Please check your inputs.');
+      return;
+    }
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential)
@@ -31,11 +55,34 @@ function Login() {
           </div>
 
           <form onSubmit={signIn} action='/' className="login-form">
-            <input type="email" name="userName" className='form-one-input input-name' placeholder='Email' value={email}
-              onChange={(e) => setEmail(e.target.value)} />
+            <input type="email"
+              name="userName"
+              className='form-one-input input-name'
+              placeholder='Email'
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validateEmail(e.target.value);
+              }} />
+            {!isValidEmail && (
+              <p style={{ color: 'red' }} className="error-message">
+                Please enter a valid email!
+              </p>
+            )}
 
-            <input type="password" className='form-one-input input-pass' placeholder='Password' value={password}
-              onChange={(e) => setPassword(e.target.value)} />
+            <input type="password"
+              className='form-one-input input-pass'
+              placeholder='Password'
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validatePassword(e.target.value);
+              }} />
+            {!isValidPassword && (
+              <p style={{ color: 'red' }} className="error-message">
+                Password must be at least 8 characters long!
+              </p>
+            )}
 
             <div className="custom-check">
               <div className="sign-control">

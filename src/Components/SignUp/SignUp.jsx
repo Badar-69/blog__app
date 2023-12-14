@@ -12,8 +12,31 @@ function SignUp() {
     const [password, setPassword] = useState('');
     const [profileImage, setProfileImage] = useState(null);
     const [signupSuccess, setSignupSuccess] = useState(false);
+    const [isValidEmail, setIsValidEmail] = useState(true);
+    const [isValidUsername, setIsValidUsername] = useState(true);
+    const [isValidPassword, setIsValidPassword] = useState(true);
 
 
+    const validateEmail = (inputEmail) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(inputEmail);
+    };
+
+    const validateUsername = (username) => {
+        const isValid = username.trim() !== '';
+        setIsValidUsername(isValid);
+    };
+
+    const validatePassword = (password) => {
+        const isValid = password.length >= 8;
+        setIsValidPassword(isValid);
+    };
+
+    const handleEmailChange = (e) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+        setIsValidEmail(validateEmail(newEmail));
+    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -23,7 +46,18 @@ function SignUp() {
     const handleSignUp = async (e) => {
         e.preventDefault();
 
+        if (!isValidEmail || !isValidUsername || password.length < 8) {
+            alert('Sign up failed. Please check your inputs.');
+            // You can set an error state here and display a corresponding message.
+            return;
+        }
+
         try {
+            if (!isValidEmail) {
+                // If email is not valid, don't proceed with signup
+                return;
+            }
+
             const user = await signUp(email, password, name, profileImage);
             console.log('User signed up successfully:', user);
 
@@ -63,16 +97,44 @@ function SignUp() {
                             </div>
 
                             <form onSubmit={handleSignUp} action='/' className="signup-form">
-                                <input type="text" name="userName" className='form-two-input input-user' placeholder='Username'
+                                <input type="text" name="userName"
+                                    className='form-two-input input-user'
+                                    placeholder='Username'
                                     value={name}
-                                    onChange={(e) => setName(e.target.value)} />
+                                    onChange={(e) => {
+                                        setName(e.target.value);
+                                        validateUsername(e.target.value);
+                                    }} />
 
-                                <input type="email" name="email" className="form-two-input input-email" placeholder='Email Address'
+                                {!isValidUsername && (
+                                    <p style={{ color: 'red' }} className="error-message">
+                                        Please enter a valid username !
+                                    </p>
+                                )}
+
+                                <input type="email" name="email"
+                                    className={`form-two-input input-email ${isValidEmail ? '' : 'invalid-email'}`}
+                                    placeholder='Email Address'
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)} />
+                                    onChange={handleEmailChange} />
+                                {!isValidEmail && <p style={{ color: 'red' }}
+                                    className="error-message">Please enter a valid email !</p>}
 
-                                <input type="password" className='form-two-input input-pass2' placeholder='Password' value={password} autoComplete='on'
-                                    onChange={(e) => setPassword(e.target.value)} />
+                                <input type="password"
+                                    className='form-two-input input-pass2'
+                                    placeholder='Password'
+                                    value={password}
+                                    autoComplete='on'
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        validatePassword(e.target.value);
+                                    }} />
+                                {!isValidPassword && (
+                                    <p style={{ color: 'red' }} className="error-message">
+                                        Password must be at least 8 characters !
+                                    </p>
+                                )}
+
 
                                 <div className="custom-signup">
                                     <div className="signup-control">
