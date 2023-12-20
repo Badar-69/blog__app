@@ -206,9 +206,13 @@ const fetchLatestPosts = async () => {
             dateAdded: serverTimestamp(),
         });
 
-        const postRef = collection(db, 'Posts', postId);
+        // Extract the comment ID from the newCommentRef
+        const commentId = newCommentRef.id;
+
+        const postRef = doc(db, 'Posts', postId);
         await updateDoc(postRef, {
-            comments: arrayUnion(newCommentRef),
+            // Use the commentId instead of the newCommentRef
+            comments: arrayUnion(commentId),
         });
 
         console.log('Comment added successfully!');
